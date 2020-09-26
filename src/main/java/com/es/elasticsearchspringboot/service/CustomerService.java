@@ -88,7 +88,52 @@ public class CustomerService {
 
         QueryBuilder qBuilder = QueryBuilders.matchQuery("firstName", "hari");
         QueryBuilder qBuilder2 = QueryBuilders.matchQuery("age", "31");
-        QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(qBuilder).must(qBuilder2);
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                                                 .must(qBuilder)
+                                                 .must(qBuilder2);
+
+        searchSourceBuilder.query(queryBuilder);
+
+        searchRequest.source(searchSourceBuilder);
+        /* search req - end */
+
+        final List<Customer> customerListResult = new ArrayList<>();
+
+        /* 2. search response - start */
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+            if (searchResponse.getHits().getTotalHits().value > 0) {
+                final SearchHit[] hits = searchResponse.getHits().getHits();
+                for (SearchHit hit : hits) {
+                    Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+                    //TODO :
+                    final Customer customer = objectMapper.convertValue(sourceAsMap, Customer.class);
+                    customerListResult.add(customer);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return customerListResult;
+    }
+
+    public List<Customer> filterDataFromES_usingDSL_matchQuery_chandan() {
+        System.err.println("CustomerService.filterDataFromES_usingDSL_matchQuery");
+
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+
+        /* 1. search req - start */
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices("customer_index2");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        QueryBuilder qBuilder = QueryBuilders.matchQuery("firstName", "chandan");
+        QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("lastName", "yadav");
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                                                 .must(qBuilder)
+                                                 .must(queryBuilder1);
 
         searchSourceBuilder.query(queryBuilder);
 
