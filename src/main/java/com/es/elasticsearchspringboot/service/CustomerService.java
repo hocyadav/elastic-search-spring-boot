@@ -41,38 +41,38 @@ public class CustomerService {
         System.err.println("CustomerService.getAllDataFromES_UsingDSL_matchAllQuery");
 
         final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
+        final List<Customer> customerListResult;
+        try (RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost))) {
 
-        /* 1. search req - start */
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices("customer_index2");
+            /* 1. search req - start */
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.indices("customer_index2");
 
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        QueryBuilder query = QueryBuilders.matchAllQuery();
-        searchSourceBuilder.query(query);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            QueryBuilder query = QueryBuilders.matchAllQuery();
+            searchSourceBuilder.query(query);
 
-        searchRequest.source(searchSourceBuilder);
-        /* search req - end */
+            searchRequest.source(searchSourceBuilder);
+            /* search req - end */
 
-        final List<Customer> customerListResult = new ArrayList<>();
+            customerListResult = new ArrayList<>();
 
-        /* 2. search response - start */
-        SearchResponse searchResponse;
-        try {
-            searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-            if (searchResponse.getHits().getTotalHits().value > 0) {
-                final SearchHit[] hits = searchResponse.getHits().getHits();
-                for (SearchHit hit : hits) {
-                    Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-                    //TODO :
-                    final Customer customer = objectMapper.convertValue(sourceAsMap, Customer.class);
-                    customerListResult.add(customer);
+            /* 2. search response - start */
+            SearchResponse searchResponse;
+            try {
+                searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+                if (searchResponse.getHits().getTotalHits().value > 0) {
+                    final SearchHit[] hits = searchResponse.getHits().getHits();
+                    for (SearchHit hit : hits) {
+                        Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+                        final Customer customer = objectMapper.convertValue(sourceAsMap, Customer.class);
+                        customerListResult.add(customer);
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        client.close();
         return customerListResult;
     }
 
@@ -121,6 +121,7 @@ public class CustomerService {
     }
 
     public List<Customer> filterDataFromES_usingDSL_matchQuery_chandan() throws IOException {
+        System.err.println("CustomerService.filterDataFromES_usingDSL_matchQuery");
         System.err.println("CustomerService.filterDataFromES_usingDSL_matchQuery");
 
         HttpHost httpHost = new HttpHost("localhost", 9200, "http");
