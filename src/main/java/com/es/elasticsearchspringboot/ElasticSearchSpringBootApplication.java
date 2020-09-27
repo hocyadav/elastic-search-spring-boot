@@ -41,20 +41,20 @@ public class ElasticSearchSpringBootApplication implements CommandLineRunner {
         //createClientObject();
         //deleteFun();
 
-//        List<Customer> customerList = customerService.getAllDataFromES_UsingDSL_matchAllQuery();
-//        customerList.forEach(System.out::println);
-//
-//        List<Customer> customerList1 = customerService.filterDataFromES_usingDSL_matchQuery();
-//        customerList1.forEach(System.out::println);
-//
-//        List<Customer> customerList2 = customerService.filterAGE_DataFromES_usingDSL_matchQuery();
-//        customerList2.forEach(System.out::println);
-//
-//        List<Customer> customerList3 = customerService.filterAllDataFromES_usingDSL_regexpQuery("ha");
-//        customerList3.forEach(System.out::println);
-//
-//        List<Customer> customerList = customerService.filterAllDataFromES_usingDSL_regexpQuery_multiMatch("yadav");
-//        customerList.forEach(System.out::println);
+        List<Customer> customerList = customerService.getAllDataFromES_UsingDSL_matchAllQuery();
+        customerList.forEach(System.out::println);
+
+        List<Customer> customerList1 = customerService.filterDataFromES_usingDSL_matchQuery();
+        customerList1.forEach(System.out::println);
+
+        List<Customer> customerList2 = customerService.filterAGE_DataFromES_usingDSL_matchQuery();
+        customerList2.forEach(System.out::println);
+
+        List<Customer> customerList3 = customerService.filterAllDataFromES_usingDSL_regexpQuery("ha");
+        customerList3.forEach(System.out::println);
+
+        List<Customer> customerList4 = customerService.filterAllDataFromES_usingDSL_regexpQuery_multiMatch("yadav");
+        customerList4.forEach(System.out::println);
 
         customerService.filterDataFromES_usingDSL_matchQuery_chandan().forEach(System.out::println);
     }

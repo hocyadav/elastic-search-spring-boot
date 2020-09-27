@@ -29,9 +29,9 @@ public class CustomerResource {
         System.err.println("CustomerResource.getAllCustomer");
 
         final List<Customer> customerList = new ArrayList<>();
-        customerDao.findAll().forEach(customer -> customerList.add(customer));
-
-        return Optional.ofNullable(customerList);
+        customerDao.findAll().forEach(customerList::add);
+        System.out.println("customerList = " + customerList);
+        return Optional.of(customerList);
     }
 
     /* working */
@@ -40,7 +40,9 @@ public class CustomerResource {
         System.err.println("CustomerResource.getCustomer");
         System.out.println("id = " + id);
 
-        return customerDao.findById(id);
+        final Optional<Customer> customerDaoById = customerDao.findById(id);
+        System.out.println("customerDaoById = " + customerDaoById);
+        return customerDaoById;
     }
 
     /* working */
@@ -50,6 +52,7 @@ public class CustomerResource {
         System.out.println("firstName = " + firstName);
 
         final List<Customer> customerList = customerDao.findByFirstName(firstName);
+        System.out.println("customerList = " + customerList);
         return Optional.ofNullable(customerList);
     }
 
@@ -60,6 +63,7 @@ public class CustomerResource {
         System.out.println("firstName = " + firstName);
 
         final List<Customer> customerList = customerDao.findByFirstName(firstName, PageRequest.of(0, 1));
+        System.out.println("customerList = " + customerList);
         return Optional.ofNullable(customerList);
     }
 
@@ -69,8 +73,7 @@ public class CustomerResource {
         System.err.println("CustomerResource.addCustomer");
         System.out.println("customer = " + customer);
 
-        final Customer fetchedCustomer = customerDao.save(customer);
-        return fetchedCustomer;
+        return customerDao.save(customer);
     }
 
     /* working */
@@ -79,10 +82,6 @@ public class CustomerResource {
         System.err.println("CustomerResource.deleteCustomer");
 
         customerDao.deleteAll();
-    }
-
-    public void foo() {
-
     }
 
 }
