@@ -31,16 +31,17 @@ public class CustomerService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /* call clinet in every time - for command line runner */
+    /* call client in every time - for command line runner */
 
     //    RestHighLevelClient client =
     //            new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
     /* working */
-    public List<Customer> getAllDataFromES_UsingDSL_matchAllQuery() {
+    public List<Customer> getAllDataFromES_UsingDSL_matchAllQuery() throws IOException {
         System.err.println("CustomerService.getAllDataFromES_UsingDSL_matchAllQuery");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -56,7 +57,7 @@ public class CustomerService {
         final List<Customer> customerListResult = new ArrayList<>();
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -71,14 +72,16 @@ public class CustomerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.close();
         return customerListResult;
     }
 
     /* working */
-    public List<Customer> filterDataFromES_usingDSL_matchQuery() {
+    public List<Customer> filterDataFromES_usingDSL_matchQuery() throws IOException {
         System.err.println("CustomerService.filterDataFromES_usingDSL_matchQuery");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -88,9 +91,7 @@ public class CustomerService {
 
         QueryBuilder qBuilder = QueryBuilders.matchQuery("firstName", "hari");
         QueryBuilder qBuilder2 = QueryBuilders.matchQuery("age", "31");
-        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                                                 .must(qBuilder)
-                                                 .must(qBuilder2);
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(qBuilder).must(qBuilder2);
 
         searchSourceBuilder.query(queryBuilder);
 
@@ -100,7 +101,7 @@ public class CustomerService {
         final List<Customer> customerListResult = new ArrayList<>();
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -115,13 +116,15 @@ public class CustomerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.close();
         return customerListResult;
     }
 
-    public List<Customer> filterDataFromES_usingDSL_matchQuery_chandan() {
+    public List<Customer> filterDataFromES_usingDSL_matchQuery_chandan() throws IOException {
         System.err.println("CustomerService.filterDataFromES_usingDSL_matchQuery");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -131,9 +134,7 @@ public class CustomerService {
 
         QueryBuilder qBuilder = QueryBuilders.matchQuery("firstName", "chandan");
         QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("lastName", "yadav");
-        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                                                 .must(qBuilder)
-                                                 .must(queryBuilder1);
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(qBuilder).must(queryBuilder1);
 
         searchSourceBuilder.query(queryBuilder);
 
@@ -143,7 +144,7 @@ public class CustomerService {
         final List<Customer> customerListResult = new ArrayList<>();
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -158,14 +159,16 @@ public class CustomerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.close();
         return customerListResult;
     }
 
     /* working */
-    public List<Customer> filterAGE_DataFromES_usingDSL_matchQuery() {
+    public List<Customer> filterAGE_DataFromES_usingDSL_matchQuery() throws IOException {
         System.err.println("CustomerService.filterAGE_DataFromES_usingDSL_matchQuery");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -184,7 +187,7 @@ public class CustomerService {
         final List<Customer> customerListResult = new ArrayList<>();
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -199,14 +202,16 @@ public class CustomerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.close();
         return customerListResult;
     }
 
     /* working */
-    public List<Customer> filterAllDataFromES_usingDSL_regexpQuery(String name) {
+    public List<Customer> filterAllDataFromES_usingDSL_regexpQuery(String name) throws IOException {
         System.err.println("CustomerService.filterAllDataFromES_usingDSL_regexpQuery");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -224,7 +229,7 @@ public class CustomerService {
         final List<Customer> customerListResult = new ArrayList<>();
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -239,14 +244,16 @@ public class CustomerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.close();
         return customerListResult;
     }
 
     /* working */
     public List<Customer> filterAllDataFromES_usingDSL_regexpQuery_multiMatch(String name) {
-        System.err.println("CustomerService.filterAllDataFromES_usingDSL_regexpQuery");
+        System.err.println("CustomerService.filterAllDataFromES_usingDSL_regexpQuery_multiMatch");
 
-        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
+        final HttpHost httpHost = new HttpHost("localhost", 9200, "http");
+        RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(httpHost));
 
         /* 1. search req - start */
         SearchRequest searchRequest = new SearchRequest();
@@ -261,10 +268,10 @@ public class CustomerService {
         searchRequest.source(searchSourceBuilder);
         /* search req - end */
 
-        final List<Customer> customerListResult = new ArrayList<>();
+        final List<Customer> customerListResult = new ArrayList<>();//TODO : new feature - implementation pending
 
         /* 2. search response - start */
-        SearchResponse searchResponse = null;
+        SearchResponse searchResponse;
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             if (searchResponse.getHits().getTotalHits().value > 0) {
@@ -293,7 +300,6 @@ public class CustomerService {
         NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(queryBuilder).build();
 
         /* 3. execute QUERY - get response as list */
-
     }
 
 }
